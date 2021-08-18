@@ -1,0 +1,47 @@
+Activate your project:
+$ gcloud config set project $(gcloud projects list --format='value(PROJECT_ID)' --filter='qwiklabs-gcp')
+
+Clone the pet-theory repository and access the source code:
+$ git clone https://github.com/rosera/pet-theory.git && cd pet-theory/lab08
+
+Create the file main.go and add the below contents to the file:
+
+Now create a file named Dockerfile and add the following to it:
+
+Run the following command to build the binary:
+$ go build -o server
+
+Deploy your simple REST API by running:
+$ gcloud builds submit \
+  --tag gcr.io/$GOOGLE_CLOUD_PROJECT/rest-api:0.1
+   
+  Once the container has been built, deploy it:
+ $ gcloud beta run deploy rest-api \
+  --image gcr.io/$GOOGLE_CLOUD_PROJECT/rest-api:0.1 \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated
+  
+  When the deployment is complete, you will see a message like this:
+ Service [rest-api] revision [rest-api-00001] has been deployed and is serving
+traffic at https://rest-api-[hash].a.run.app
+
+
+Import test customer data 
+========================================
+Return to the Cloud Console and click the Navigation Menu > Firestore.
+
+Migrate the import files into a Cloud Storage bucket that has been created for you:
+$ gsutil cp -r gs://spls/gsp645/2019-10-06T20:10:37_43617 gs://$GOOGLE_CLOUD_PROJECT-customer
+
+Now import this data into Firebase:
+gcloud beta firestore import gs://$GOOGLE_CLOUD_PROJECT-customer/2019-10-06T20:10:37_43617/
+
+
+Connect the REST API to the Firestore database
+==================================================
+
+
+Get the value of the $GOOGLE_CLOUD_PROJECT environment variable
+echo $GOOGLE_CLOUD_PROJECT
+
